@@ -1,7 +1,7 @@
-import 'package:dji_mapper/shared/aircraft_settings.dart';
+import 'package:ymapper/shared/aircraft_settings.dart';
 import 'package:dji_waypoint_engine/engine.dart';
-import 'package:dji_mapper/components/text_field.dart';
-import 'package:dji_mapper/shared/value_listeneables.dart';
+import 'package:ymapper/components/text_field.dart';
+import 'package:ymapper/shared/value_listeneables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +43,9 @@ class _AircraftBarState extends State<AircraftBar> {
                   children: [
                     CustomTextField(
                         labelText: "Altitude (m)",
-                        min: listenables.groundOffset < 10?10:listenables.groundOffset + 1,
+                        min: listenables.groundOffset < 10
+                            ? 10
+                            : listenables.groundOffset + 1,
                         max: 500,
                         onChanged: (m) {
                           listenables.altitude = m.round();

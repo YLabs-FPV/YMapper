@@ -1,4 +1,4 @@
-import 'package:dji_mapper/main.dart';
+import 'package:ymapper/main.dart';
 import 'package:flutter/material.dart';
 
 class ThemeManager extends ChangeNotifier {

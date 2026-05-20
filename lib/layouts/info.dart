@@ -1,5 +1,5 @@
-import 'package:dji_mapper/core/drone_mapping_engine.dart';
-import 'package:dji_mapper/shared/value_listeneables.dart';
+import 'package:ymapper/core/drone_mapping_engine.dart';
+import 'package:ymapper/shared/value_listeneables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,25 +27,26 @@ class _InfoState extends State<Info> {
             listenables.takeoffLine?.points ?? []);
         var returnDistance = DroneMappingEngine.calculateTotalDistance(
             listenables.returnLine?.points ?? []);
-        totalDistance = (mainDistance + takeoffDistance + returnDistance).round();
+        totalDistance =
+            (mainDistance + takeoffDistance + returnDistance).round();
         area = DroneMappingEngine.calculateArea(listenables.polygon).round();
         recommendedShutterSpeed =
-          DroneMappingEngine.calculateRecommendedShutterSpeed(
-            altitude: listenables.altitude - listenables.groundOffset,
-            sensorWidth: listenables.sensorWidth,
-            focalLength: listenables.focalLength,
-            imageWidth: listenables.imageWidth,
-            droneSpeed: listenables.speed,
-          );
-          photoTimeInterval = DroneMappingEngine.calculatePhotoTimeInterval(
-            altitude: listenables.altitude,
-            sensorHeight: listenables.sensorHeight,
-            focalLength: listenables.focalLength,
-            imageHeight: listenables.imageHeight,
-            forwardOverlap: listenables.forwardOverlap / 100.0,
-            droneSpeed: listenables.speed,
-            groundOffset: listenables.groundOffset,
-          );          
+            DroneMappingEngine.calculateRecommendedShutterSpeed(
+          altitude: listenables.altitude - listenables.groundOffset,
+          sensorWidth: listenables.sensorWidth,
+          focalLength: listenables.focalLength,
+          imageWidth: listenables.imageWidth,
+          droneSpeed: listenables.speed,
+        );
+        photoTimeInterval = DroneMappingEngine.calculatePhotoTimeInterval(
+          altitude: listenables.altitude,
+          sensorHeight: listenables.sensorHeight,
+          focalLength: listenables.focalLength,
+          imageHeight: listenables.imageHeight,
+          forwardOverlap: listenables.forwardOverlap / 100.0,
+          droneSpeed: listenables.speed,
+          groundOffset: listenables.groundOffset,
+        );
       }
 
       return Column(
@@ -60,7 +61,9 @@ class _InfoState extends State<Info> {
                 });
               }),
           SwitchListTile(
-              title: Text((listenables.createCameraPoints)?"Show Photo Points":"Show Waypoints" ),
+              title: Text((listenables.createCameraPoints)
+                  ? "Show Photo Points"
+                  : "Show Waypoints"),
               value: listenables.showPoints,
               onChanged: (value) {
                 setState(() {
@@ -79,11 +82,12 @@ class _InfoState extends State<Info> {
               child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              if(listenables.createCameraPoints)
+              if (listenables.createCameraPoints)
                 Text("Number of photos: ${listenables.photoLocations.length}",
                     style: const TextStyle(fontSize: 16))
               else
-                Text("Number of waypoints: ${listenables.photoLocations.length}",
+                Text(
+                    "Number of waypoints: ${listenables.photoLocations.length}",
                     style: const TextStyle(fontSize: 16)),
               const Divider(),
               Text("Flight distance: $totalDistance m",
@@ -101,7 +105,7 @@ class _InfoState extends State<Info> {
               const Divider(),
               Text(
                   "Forward Overlap time interval: ${photoTimeInterval.toStringAsFixed(1)} seconds",
-                  style: const TextStyle(fontSize: 16)),                  
+                  style: const TextStyle(fontSize: 16)),
             ]),
           ))
         ],

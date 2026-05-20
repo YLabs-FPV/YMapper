@@ -1,5 +1,5 @@
-import 'package:dji_mapper/components/popups/dji_load_alert.dart';
-import 'package:dji_mapper/shared/theme_manager.dart';
+import 'package:ymapper/components/popups/dji_load_alert.dart';
+import 'package:ymapper/shared/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,7 @@ class _MappingAppBarState extends State<MappingAppBar> {
                   "assets/logo.png",
                   width: 60,
                 )),
-            child: const Text("DJI Mapper")),
+            child: const Text("YMapper")),
         elevation: 10,
         actions: [
           PopupMenuButton(
@@ -108,8 +108,7 @@ class _MappingAppBarState extends State<MappingAppBar> {
                   theme.toggleTheme();
                   break;
                 case "github":
-                  launchUrl(
-                      Uri.https("github.com", "YarosMallorca/DJI-Mapper"));
+                  launchUrl(Uri.https("github.com", "YLabs-FPV/YMapper"));
                 case "help":
                   launchUrl(Uri.https("mavicpilots.com",
                       "/threads/waypoints-how-to-back-up-export-import.135283"));
