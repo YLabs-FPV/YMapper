@@ -480,7 +480,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.yarosfpv.djiWaypointMapping.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/dji_mapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/dji_mapper";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ymapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ymapper";
 			};
 			name = Debug;
 		};
@@ -495,7 +495,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.yarosfpv.djiWaypointMapping.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/dji_mapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/dji_mapper";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ymapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ymapper";
 			};
 			name = Release;
 		};
@@ -510,7 +510,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.yarosfpv.djiWaypointMapping.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/dji_mapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/dji_mapper";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ymapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ymapper";
 			};
 			name = Profile;
 		};
