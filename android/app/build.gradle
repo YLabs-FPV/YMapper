@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.yarosfpv.dji_mapper"
+    namespace "com.yarosfpv.ymapper"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -41,9 +41,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.yarosfpv.djimapper"
+        applicationId "com.yarosfpv.ymapper"
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 37
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

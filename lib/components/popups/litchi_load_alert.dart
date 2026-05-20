@@ -1,4 +1,4 @@
-import 'package:dji_mapper/main.dart';
+import 'package:ymapper/main.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -57,7 +57,7 @@ class _LitchiLoadAlertState extends State<LitchiLoadAlert> {
             ),
             const SizedBox(height: 4),
             const Text(
-              "The Finish Action should be set the same as in the DJI Mapper",
+              "The Finish Action should be set the same as in YMapper",
               style: TextStyle(fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),

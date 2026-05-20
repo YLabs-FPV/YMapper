@@ -1,8 +1,8 @@
-import 'package:dji_mapper/layouts/home.dart';
-import 'package:dji_mapper/presets/preset_manager.dart';
-import 'package:dji_mapper/shared/map_provider.dart';
-import 'package:dji_mapper/shared/theme_manager.dart';
-import 'package:dji_mapper/shared/value_listeneables.dart';
+import 'package:ymapper/layouts/home.dart';
+import 'package:ymapper/presets/preset_manager.dart';
+import 'package:ymapper/shared/map_provider.dart';
+import 'package:ymapper/shared/theme_manager.dart';
+import 'package:ymapper/shared/value_listeneables.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       child: DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
         return Consumer<ThemeManager>(builder: (context, theme, child) {
           return MaterialApp(
-            title: 'DJI Mapper',
+            title: 'YMapper',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               colorScheme: lightColorScheme ??

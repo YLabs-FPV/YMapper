@@ -3,6 +3,8 @@ name: Flutter
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   build-and-deploy:
@@ -13,7 +15,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.35.0"
+          flutter-version: "3.44.0"
           channel: "stable"
 
       - name: Get dependencies
@@ -37,14 +39,3 @@ jobs:
       - name: Test litchi_waypoint_engine
         working-directory: ./packages/litchi_waypoint_engine
         run: dart test
-
-      - name: Build Flutter Web
-        run: flutter build web --release
-
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          channelId: live
-          projectId: dji-mapper

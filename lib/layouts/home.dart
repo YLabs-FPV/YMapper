@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:dji_mapper/components/app_bar.dart';
-import 'package:dji_mapper/core/drone_mapping_engine.dart';
-import 'package:dji_mapper/github/update_checker.dart';
-import 'package:dji_mapper/layouts/aircraft.dart';
-import 'package:dji_mapper/layouts/camera.dart';
-import 'package:dji_mapper/layouts/export.dart';
-import 'package:dji_mapper/layouts/info.dart';
-import 'package:dji_mapper/main.dart';
-import 'package:dji_mapper/presets/preset_manager.dart';
-import 'package:dji_mapper/shared/map_provider.dart';
-import 'package:dji_mapper/shared/value_listeneables.dart';
+import 'package:ymapper/components/app_bar.dart';
+import 'package:ymapper/core/drone_mapping_engine.dart';
+import 'package:ymapper/github/update_checker.dart';
+import 'package:ymapper/layouts/aircraft.dart';
+import 'package:ymapper/layouts/camera.dart';
+import 'package:ymapper/layouts/export.dart';
+import 'package:ymapper/layouts/info.dart';
+import 'package:ymapper/main.dart';
+import 'package:ymapper/presets/preset_manager.dart';
+import 'package:ymapper/shared/map_provider.dart';
+import 'package:ymapper/shared/value_listeneables.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -124,7 +124,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                                 child: const Text('Download'),
                                 onPressed: () {
                                   launchUrl(Uri.https("github.com",
-                                      "YarosMallorca/DJI-Mapper/releases/latest"));
+                                      "YLabs-FPV/YMapper/releases/latest"));
                                   Navigator.pop(context);
                                 })
                           ],
@@ -144,7 +144,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         },
         options: Options(
           headers: {
-            "User-Agent": "DJI-Mapper/1.5.0 (https://github.com/YarosMallorca/DJI-Mapper)",
+            "User-Agent": "YMapper (https://github.com/YLabs-FPV/YMapper)",
           },
         ),
       );
@@ -219,7 +219,11 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       groundOffset: listenables.groundOffset.toDouble(),
     );
 
-    var waypoints = droneMapping.generateWaypoints(listenables.polygon, listenables.createCameraPoints, listenables.fillGrid, listenables.homePoint);
+    var waypoints = droneMapping.generateWaypoints(
+        listenables.polygon,
+        listenables.createCameraPoints,
+        listenables.fillGrid,
+        listenables.homePoint);
     listenables.photoLocations = waypoints;
     if (waypoints.isEmpty) return;
 
@@ -229,37 +233,36 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       var photoLocation = waypoints[i];
       _photoMarkers.add(Marker(
         point: photoLocation,
-        height: 40,  // Increased height to fit number
+        height: 40, // Increased height to fit number
         alignment: Alignment.center,
         rotate: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (listenables.createCameraPoints)
-                Icon(Icons.photo_camera,
-                    size: 20,  // Reduced size for better fit
-                    color: Theme.of(context).colorScheme.onPrimaryContainer)
-              else
-                Icon(Icons.place_sharp,
-                    size: 20,  // Reduced size for better fit
-                    color: Theme.of(context).colorScheme.onPrimaryContainer),
-
-              Text(  // Waypoint number text
-                "${i + 1}",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontSize: 10,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (listenables.createCameraPoints)
+              Icon(Icons.photo_camera,
+                  size: 20, // Reduced size for better fit
+                  color: Theme.of(context).colorScheme.onPrimaryContainer)
+            else
+              Icon(Icons.place_sharp,
+                  size: 20, // Reduced size for better fit
+                  color: Theme.of(context).colorScheme.onPrimaryContainer),
+            Text(
+              // Waypoint number text
+              "${i + 1}",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                fontSize: 10,
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ));
     }
     listenables.flightLine = Polyline(
-      points: waypoints,
-      strokeWidth: 3,
-      color: Theme.of(context).colorScheme.tertiary
-    );
+        points: waypoints,
+        strokeWidth: 3,
+        color: Theme.of(context).colorScheme.tertiary);
 
     // Draw directional arrow markers
     _flightLineArrowMarkers.clear();
@@ -273,7 +276,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       double cumulativeDistance = 0.0;
 
       for (int i = 1; i < waypoints.length; i++) {
-        cumulativeDistance = _placeArrowMarkers(lastPoint, waypoints[i], arrowSpacing, distance, cumulativeDistance, _flightLineArrowMarkers, Theme.of(context).colorScheme.tertiary, 15);
+        cumulativeDistance = _placeArrowMarkers(
+            lastPoint,
+            waypoints[i],
+            arrowSpacing,
+            distance,
+            cumulativeDistance,
+            _flightLineArrowMarkers,
+            Theme.of(context).colorScheme.tertiary,
+            15);
         lastPoint = waypoints[i];
       }
 
@@ -289,18 +300,20 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         points: [home, first],
         strokeWidth: 1,
         color: Theme.of(context).colorScheme.primary,
-        pattern: StrokePattern.dotted(), 
+        pattern: StrokePattern.dotted(),
       );
 
       listenables.returnLine = Polyline(
         points: [home, last],
         strokeWidth: 1,
         color: Theme.of(context).colorScheme.primary,
-        pattern: StrokePattern.dotted(), 
+        pattern: StrokePattern.dotted(),
       );
 
-      _placeArrowMarkers(home, first, arrowSpacing, distance, 0.0, _takeoffLineArrowMarkers, Theme.of(context).colorScheme.primary, 10);
-      _placeArrowMarkers(last, home, arrowSpacing, distance, 0.0, _returnLineArrowMarkers, Theme.of(context).colorScheme.primary, 10);
+      _placeArrowMarkers(home, first, arrowSpacing, distance, 0.0,
+          _takeoffLineArrowMarkers, Theme.of(context).colorScheme.primary, 10);
+      _placeArrowMarkers(last, home, arrowSpacing, distance, 0.0,
+          _returnLineArrowMarkers, Theme.of(context).colorScheme.primary, 10);
     } else {
       listenables.takeoffLine = null;
       listenables.returnLine = null;
@@ -311,7 +324,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   }
 
   // Add directional arrows along a given segment of fromPoint to toPoint facing the arrows to the toPoint
-  double _placeArrowMarkers(LatLng fromPoint, LatLng toPoint, double arrowSpacing, var distance, double cumulativeDistance, List<Marker> targetArrowMarkers, Color arrowColour, double arrowSize) {
+  double _placeArrowMarkers(
+      LatLng fromPoint,
+      LatLng toPoint,
+      double arrowSpacing,
+      var distance,
+      double cumulativeDistance,
+      List<Marker> targetArrowMarkers,
+      Color arrowColour,
+      double arrowSize) {
     double segmentDistance = distance.as(LengthUnit.Meter, fromPoint, toPoint);
     double distAlong = arrowSpacing - (cumulativeDistance % arrowSpacing);
 
@@ -322,7 +343,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       // Interpolate position along the segment
       LatLng arrowPos = LatLng(
         fromPoint.latitude + fraction * (toPoint.latitude - fromPoint.latitude),
-        fromPoint.longitude + fraction * (toPoint.longitude - fromPoint.longitude),
+        fromPoint.longitude +
+            fraction * (toPoint.longitude - fromPoint.longitude),
       );
 
       targetArrowMarkers.add(Marker(
@@ -373,19 +395,18 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
             child: FlutterMap(
               mapController: mapProvider.mapController,
               options: MapOptions(
-                onTap: (tapPosition, point) => setState(() {
-                  if (listenables.homePoint == null) {
-                    listenables.homePoint = point;
-                  } else {
-                    listenables.polygon.add(point);
-                  }
-                }),
-                onSecondaryTap: (tapPosition, point) {
-                  setState(() {
-                    listenables.homePoint = point;
-                  });
-                }
-              ),
+                  onTap: (tapPosition, point) => setState(() {
+                        if (listenables.homePoint == null) {
+                          listenables.homePoint = point;
+                        } else {
+                          listenables.polygon.add(point);
+                        }
+                      }),
+                  onSecondaryTap: (tapPosition, point) {
+                    setState(() {
+                      listenables.homePoint = point;
+                    });
+                  }),
               children: [
                 TileLayer(
                     tileProvider: CancellableNetworkTileProvider(),
@@ -398,9 +419,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                     urlTemplate: _selectedMapLayer == MapLayer.streets
                         ? 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
                         : 'https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
-                    userAgentPackageName: 'com.yarosfpv.dji_mapper',
-                    subdomains: const ['mt0', 'mt1', 'mt2', 'mt3']
-                  ),
+                    userAgentPackageName: 'com.yarosfpv.ymapper',
+                    subdomains: const ['mt0', 'mt1', 'mt2', 'mt3']),
                 // flight path boundary
                 PolygonLayer(polygons: [
                   if (listenables.polygon.length > 1)
@@ -412,12 +432,15 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                         borderStrokeWidth: 3),
                 ]),
                 // flightLine, takeoffLine & returnLine
-                if (listenables.homePoint != null) 
+                if (listenables.homePoint != null)
                   PolylineLayer(
                     polylines: [
-                      if (listenables.flightLine != null) listenables.flightLine!,
-                      if (listenables.takeoffLine != null) listenables.takeoffLine!,  // dotted start line from home
-                      if (listenables.returnLine != null) listenables.returnLine!,  // dotted return line to home
+                      if (listenables.flightLine != null)
+                        listenables.flightLine!,
+                      if (listenables.takeoffLine != null)
+                        listenables.takeoffLine!, // dotted start line from home
+                      if (listenables.returnLine != null)
+                        listenables.returnLine!, // dotted return line to home
                     ],
                   ),
                 // directional flight path arrows
@@ -425,32 +448,31 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                 MarkerLayer(markers: _takeoffLineArrowMarkers),
                 MarkerLayer(markers: _returnLineArrowMarkers),
                 // photo markers
-                if (listenables.showPoints)
-                  MarkerLayer(markers: _photoMarkers),
-                  DragMarkers(markers: [
-                    for (var point in listenables.polygon)
-                      DragMarker(
-                        size: const Size(30, 30),
-                        point: point,
-                        alignment: Alignment.topCenter,
-                        builder: (_, coords, b) => GestureDetector(
-                            onSecondaryTap: () => setState(() {
-                                  if (listenables.polygon.contains(point)) {
-                                    listenables.polygon.remove(point);
-                                  }
-                                }),
-                            child: const Icon(Icons.place, size: 30)),
-                        onDragUpdate: (details, latLng) => {
-                          if (listenables.polygon.contains(point))
-                            {
-                              listenables.polygon[
+                if (listenables.showPoints) MarkerLayer(markers: _photoMarkers),
+                DragMarkers(markers: [
+                  for (var point in listenables.polygon)
+                    DragMarker(
+                      size: const Size(30, 30),
+                      point: point,
+                      alignment: Alignment.topCenter,
+                      builder: (_, coords, b) => GestureDetector(
+                          onSecondaryTap: () => setState(() {
+                                if (listenables.polygon.contains(point)) {
+                                  listenables.polygon.remove(point);
+                                }
+                              }),
+                          child: const Icon(Icons.place, size: 30)),
+                      onDragUpdate: (details, latLng) => {
+                        if (listenables.polygon.contains(point))
+                          {
+                            listenables.polygon[
                                 listenables.polygon.indexOf(point)] = latLng
-                            }
-                        },
-                      ),
-                  ]),
+                          }
+                      },
+                    ),
+                ]),
                 // home point icon
-                if (listenables.homePoint != null) 
+                if (listenables.homePoint != null)
                   DragMarkers(
                     // home marker
                     markers: [
@@ -461,13 +483,16 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                         onDragUpdate: (details, latLng) {
                           listenables.homePoint = latLng;
                         },
-                        builder: (context, coords, isDragging) => GestureDetector(
+                        builder: (context, coords, isDragging) =>
+                            GestureDetector(
                           onSecondaryTap: () {
                             if (listenables.polygon.isEmpty) {
                               listenables.homePoint = null;
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Cannot delete home point while boundary markers exist. Remove all boundary markers first.")),
+                                const SnackBar(
+                                    content: Text(
+                                        "Cannot delete home point while boundary markers exist. Remove all boundary markers first.")),
                               );
                             }
                           },
@@ -485,7 +510,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                         ),
                       ),
                     ],
-                  ),  
+                  ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(

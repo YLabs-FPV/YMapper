@@ -1,17 +1,17 @@
-import 'package:dji_mapper/core/drone_mapper_format.dart';
-import 'package:dji_mapper/shared/map_provider.dart';
+import 'package:ymapper/core/drone_mapper_format.dart';
+import 'package:ymapper/shared/map_provider.dart';
 import 'package:flutter_map/flutter_map.dart' hide Polygon;
 import 'package:geoxml/geoxml.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:universal_io/io.dart';
-import 'package:dji_mapper/components/popups/dji_load_alert.dart';
-import 'package:dji_mapper/components/popups/litchi_load_alert.dart';
-import 'package:dji_mapper/main.dart';
+import 'package:ymapper/components/popups/dji_load_alert.dart';
+import 'package:ymapper/components/popups/litchi_load_alert.dart';
+import 'package:ymapper/main.dart';
 import 'package:litchi_waypoint_engine/engine.dart' as litchi;
 import 'package:universal_html/html.dart' as html;
 import 'package:archive/archive.dart';
 import 'package:dji_waypoint_engine/engine.dart';
-import 'package:dji_mapper/shared/value_listeneables.dart';
+import 'package:ymapper/shared/value_listeneables.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Action;
@@ -99,7 +99,7 @@ class ExportBarState extends State<ExportBar> {
     String? outputPath;
 
     if (!kIsWeb) {
-      outputPath = await FilePicker.platform.saveFile(
+      outputPath = await FilePicker.saveFile(
           type: FileType.custom,
           fileName: "output",
           allowedExtensions: ["kmz"],
@@ -158,7 +158,7 @@ class ExportBarState extends State<ExportBar> {
     String? outputPath;
 
     if (!kIsWeb) {
-      outputPath = await FilePicker.platform.saveFile(
+      outputPath = await FilePicker.saveFile(
           type: FileType.custom,
           fileName: "litchi_mission",
           allowedExtensions: ["csv"],
@@ -280,7 +280,7 @@ class ExportBarState extends State<ExportBar> {
   }
 
   Future<void> _importFromKml(ValueListenables listenables) async {
-    var file = await FilePicker.platform.pickFiles(
+    var file = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ["kml"],
         dialogTitle: "Load Area");
@@ -428,7 +428,7 @@ class ExportBarState extends State<ExportBar> {
     String? outputPath;
 
     if (!kIsWeb) {
-      outputPath = await FilePicker.platform.saveFile(
+      outputPath = await FilePicker.saveFile(
           type: FileType.custom,
           fileName: "area",
           allowedExtensions: ["kml"],

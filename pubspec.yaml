@@ -1,9 +1,9 @@
-name: dji_mapper
+name: ymapper
 description: "Plan Survey & Photogrammetry Missions to use directly on your DJI Drone from the DJI Fly app"
 
 publish_to: "none"
 
-version: 1.5.0+7
+version: 1.6.0+8
 
 environment:
   sdk: ">=3.2.3 <4.0.0"

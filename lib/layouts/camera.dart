@@ -1,8 +1,8 @@
-import 'package:dji_mapper/components/text_field.dart';
-import 'package:dji_mapper/main.dart';
-import 'package:dji_mapper/presets/camera_preset.dart';
-import 'package:dji_mapper/presets/preset_manager.dart';
-import 'package:dji_mapper/shared/value_listeneables.dart';
+import 'package:ymapper/components/text_field.dart';
+import 'package:ymapper/main.dart';
+import 'package:ymapper/presets/camera_preset.dart';
+import 'package:ymapper/presets/preset_manager.dart';
+import 'package:ymapper/shared/value_listeneables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

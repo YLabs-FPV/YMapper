@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:dji_mapper/main.dart';
-import 'package:dji_mapper/presets/camera_preset.dart';
+import 'package:ymapper/main.dart';
+import 'package:ymapper/presets/camera_preset.dart';
 
 class PresetManager {
   static final List<CameraPreset> _defaultPresets = [
