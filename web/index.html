@@ -18,8 +18,70 @@
       async
       src="https://scripts.simpleanalyticscdn.com/latest.js"
     ></script>
+    <style>
+      :root {
+        --loading-bg: #fffbfe;
+        --spinner-track: rgba(0, 0, 0, 0.08);
+        --spinner-color: #006399;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --loading-bg: #1c1b1f;
+          --spinner-track: rgba(255, 255, 255, 0.12);
+          --spinner-color: #90caf9;
+        }
+      }
+      body {
+        margin: 0;
+        background-color: var(--loading-bg);
+      }
+      #loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--loading-bg);
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+      }
+      #loading img {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 28px;
+      }
+      #loading .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--spinner-track);
+        border-top-color: var(--spinner-color);
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="loading">
+      <img src="assets/assets/logo.png" alt="YMapper" />
+      <div class="spinner"></div>
+    </div>
     <script src="flutter_bootstrap.js" async></script>
+    <script>
+      const loading = document.getElementById("loading");
+      const observer = new MutationObserver(() => {
+        if (document.querySelector("flt-glass-pane")) {
+          loading.style.opacity = "0";
+          setTimeout(() => loading.remove(), 300);
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    </script>
   </body>
 </html>
