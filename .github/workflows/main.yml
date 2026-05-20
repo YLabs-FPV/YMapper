@@ -37,14 +37,3 @@ jobs:
       - name: Test litchi_waypoint_engine
         working-directory: ./packages/litchi_waypoint_engine
         run: dart test
-
-      - name: Build Flutter Web
-        run: flutter build web --release
-
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          channelId: live
-          projectId: ymapper
