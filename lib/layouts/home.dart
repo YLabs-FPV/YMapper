@@ -419,7 +419,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                     urlTemplate: _selectedMapLayer == MapLayer.streets
                         ? 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
                         : 'https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
-                    userAgentPackageName: 'com.yarosfpv.dji_mapper',
+                    userAgentPackageName: 'com.yarosfpv.ymapper',
                     subdomains: const ['mt0', 'mt1', 'mt2', 'mt3']),
                 // flight path boundary
                 PolygonLayer(polygons: [

@@ -57,7 +57,7 @@ class _LitchiLoadAlertState extends State<LitchiLoadAlert> {
             ),
             const SizedBox(height: 4),
             const Text(
-              "The Finish Action should be set the same as in the YMapper",
+              "The Finish Action should be set the same as in YMapper",
               style: TextStyle(fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),

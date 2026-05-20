@@ -109,9 +109,11 @@ class _MappingAppBarState extends State<MappingAppBar> {
                   break;
                 case "github":
                   launchUrl(Uri.https("github.com", "YLabs-FPV/YMapper"));
+                  break;
                 case "help":
                   launchUrl(Uri.https("mavicpilots.com",
                       "/threads/waypoints-how-to-back-up-export-import.135283"));
+                  break;
               }
             },
           )
