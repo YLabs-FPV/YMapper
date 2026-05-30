@@ -54,6 +54,14 @@ class PresetManager {
         imageWidth: 8192,
         imageHeight: 6144),
     CameraPreset(
+        name: "DJI Mini 2 (12 MP)",
+        defaultPreset: true,
+        sensorWidth: 6.3,
+        sensorHeight: 4.7,
+        focalLength: 4.49,
+        imageWidth: 4000,
+        imageHeight: 3000),
+    CameraPreset(
         name: "DJI Mini 3 Pro (12 MP)",
         defaultPreset: true,
         sensorWidth: 9.7,
