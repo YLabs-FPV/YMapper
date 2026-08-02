@@ -2,6 +2,7 @@ import 'package:ymapper/shared/aircraft_settings.dart';
 import 'package:dji_waypoint_engine/engine.dart';
 import 'package:ymapper/components/text_field.dart';
 import 'package:ymapper/shared/value_listeneables.dart';
+import 'package:ymapper/shared/yaw_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,8 @@ class _AircraftBarState extends State<AircraftBar> {
       rotation: listenables.rotation,
       delay: listenables.delayAtWaypoint,
       cameraAngle: listenables.cameraAngle,
+      yawMode: listenables.yawMode,
+      customYawAngle: listenables.customYawAngle,
       finishAction: listenables.onFinished,
       rcLostAction: listenables.rcLostAction,
     ));
@@ -149,6 +152,86 @@ class _AircraftBarState extends State<AircraftBar> {
                         _updateSettings(listenables);
                       },
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 6),
+                    const Align(
+                      child: Text(
+                        "Drone Yaw:",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Wrap(spacing: 5.0, runSpacing: 5.0, children: [
+                      ChoiceChip(
+                          label: const Text('Follow Drone Direction'),
+                          selected: listenables.yawMode ==
+                              YawMode.followDroneDirection,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              listenables.yawMode =
+                                  YawMode.followDroneDirection;
+                            });
+                            _updateSettings(listenables);
+                          }),
+                      ChoiceChip(
+                          label: const Text('Custom Angle'),
+                          selected: listenables.yawMode == YawMode.customAngle,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              listenables.yawMode = YawMode.customAngle;
+                            });
+                            _updateSettings(listenables);
+                          }),
+                    ]),
+                    if (listenables.yawMode == YawMode.customAngle) ...[
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).dividerColor),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 6),
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("Heading (°)"),
+                                Text("${listenables.customYawAngle}°"),
+                              ],
+                            ),
+                            Slider(
+                              value: listenables.customYawAngle.toDouble(),
+                              min: 0,
+                              max: 359,
+                              divisions: 359,
+                              label:
+                                  '${listenables.customYawAngle.toStringAsFixed(0)}°',
+                              onChanged: (value) {
+                                setState(() {
+                                  listenables.customYawAngle = value.round();
+                                  _updateSettings(listenables);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

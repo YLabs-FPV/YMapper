@@ -235,7 +235,7 @@ class HeadingParam extends XmlElement {
             XmlElement.tag(
               "wpml:waypointHeadingAngle",
               children: [
-                XmlText(headingAngle != null ? headingMode.toString() : "0")
+                XmlText(headingAngle != null ? headingAngle.toString() : "0")
               ],
             ),
             poiPoint ??
