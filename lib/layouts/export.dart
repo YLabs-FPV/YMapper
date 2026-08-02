@@ -12,6 +12,7 @@ import 'package:universal_html/html.dart' as html;
 import 'package:archive/archive.dart';
 import 'package:dji_waypoint_engine/engine.dart';
 import 'package:ymapper/shared/value_listeneables.dart';
+import 'package:ymapper/shared/yaw_mode.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Action;
@@ -204,13 +205,34 @@ class ExportBarState extends State<ExportBar> {
 
   List<litchi.Waypoint> _generateLitchiWaypoints(ValueListenables listenables) {
     var waypoints = <litchi.Waypoint>[];
+    var locations = listenables.photoLocations;
 
-    for (var photoLocation in listenables.photoLocations) {
+    // Litchi has no native "follow course" heading mode; each row takes a
+    // literal compass value, so the bearing to the next waypoint is computed
+    // manually to emulate the drone's nose following the flight direction.
+    const distanceCalc = Distance();
+    double lastBearing = 0.0;
+
+    for (var i = 0; i < locations.length; i++) {
+      var photoLocation = locations[i];
+
+      double heading;
+      if (listenables.yawMode == YawMode.customAngle) {
+        heading = listenables.customYawAngle.toDouble();
+      } else if (i < locations.length - 1) {
+        heading =
+            normalizeBearing(distanceCalc.bearing(photoLocation, locations[i + 1]));
+        lastBearing = heading;
+      } else {
+        heading = lastBearing;
+      }
+
       waypoints.add(litchi.Waypoint(
           latitude: photoLocation.latitude,
           longitude: photoLocation.longitude,
           altitude: listenables.altitude,
           speed: listenables.speed.toInt(),
+          heading: heading,
           gimbalPitch: listenables.cameraAngle,
           gimbalMode: litchi.GimbalMode.interpolate,
           actions: [
@@ -228,6 +250,18 @@ class ExportBarState extends State<ExportBar> {
     return waypoints;
   }
 
+  HeadingParam _buildHeadingParam(ValueListenables listenables) {
+    return listenables.yawMode == YawMode.customAngle
+        ? HeadingParam(
+            headingMode: HeadingMode.smoothTransition,
+            headingAngle: listenables.customYawAngle,
+            headingAngleEnable: true,
+            headingPathMode: HeadingPathMode.followBadArc)
+        : HeadingParam(
+            headingMode: HeadingMode.followWayline,
+            headingPathMode: HeadingPathMode.followBadArc);
+  }
+
   List<Placemark> _generateDjiPlacemarks(ValueListenables listenables) {
     var placemarks = <Placemark>[];
 
@@ -240,9 +274,7 @@ class ExportBarState extends State<ExportBar> {
           index: id,
           height: listenables.altitude,
           speed: listenables.speed,
-          headingParam: HeadingParam(
-              headingMode: HeadingMode.followWayline,
-              headingPathMode: HeadingPathMode.followBadArc),
+          headingParam: _buildHeadingParam(listenables),
           turnParam: TurnParam(
               waypointTurnMode:
                   WaypointTurnMode.toPointAndStopWithDiscontinuityCurvature,
