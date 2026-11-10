@@ -251,10 +251,15 @@ class ExportBarState extends State<ExportBar> {
   }
 
   HeadingParam _buildHeadingParam(ValueListenables listenables) {
+    // The UI stores a 0-359 compass heading, but WPML's waypointHeadingAngle
+    // only accepts [-180, 180], so headings past 180 are wrapped to negative.
+    var angle = listenables.customYawAngle;
+    var wpmlAngle = angle > 180 ? angle - 360 : angle;
+
     return listenables.yawMode == YawMode.customAngle
         ? HeadingParam(
             headingMode: HeadingMode.smoothTransition,
-            headingAngle: listenables.customYawAngle,
+            headingAngle: wpmlAngle,
             headingAngleEnable: true,
             headingPathMode: HeadingPathMode.followBadArc)
         : HeadingParam(
