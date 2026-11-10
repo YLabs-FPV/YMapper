@@ -229,10 +229,11 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         listenables.fillGrid,
         listenables.homePoint);
     listenables.photoLocations = waypoints;
-    if (waypoints.isEmpty) return;
 
     _photoMarkers.clear();
     _yawIndicatorMarkers.clear();
+
+    if (waypoints.isEmpty) return;
 
     for (int i = 0; i < waypoints.length; i++) {
       var photoLocation = waypoints[i];
@@ -421,6 +422,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
           } else {
             listenables.photoLocations.clear();
             _photoMarkers.clear();
+            _yawIndicatorMarkers.clear();
             listenables.flightLine = null;
             listenables.takeoffLine = null;
             listenables.returnLine = null;
@@ -698,6 +700,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                               onTap: () => setState(() {
                                     listenables.polygon.clear();
                                     _photoMarkers.clear();
+                                    _yawIndicatorMarkers.clear();
                                     listenables.homePoint = null;
                                   }),
                               child: Padding(
