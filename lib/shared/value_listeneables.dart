@@ -1,4 +1,5 @@
 import 'package:ymapper/presets/camera_preset.dart';
+import 'package:ymapper/shared/yaw_mode.dart';
 import 'package:dji_waypoint_engine/engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -56,6 +57,22 @@ class ValueListenables extends ChangeNotifier {
   int get cameraAngle => _cameraAngle.value;
   set cameraAngle(int value) {
     _cameraAngle.value = value;
+    notifyListeners();
+  }
+
+  /// How the drone's nose/yaw is controlled during the mission
+  final _yawMode = ValueNotifier<YawMode>(YawMode.followDroneDirection);
+  YawMode get yawMode => _yawMode.value;
+  set yawMode(YawMode value) {
+    _yawMode.value = value;
+    notifyListeners();
+  }
+
+  /// Fixed compass heading in degrees (0-359), used when yawMode == customAngle
+  final _customYawAngle = ValueNotifier<int>(0);
+  int get customYawAngle => _customYawAngle.value;
+  set customYawAngle(int value) {
+    _customYawAngle.value = value;
     notifyListeners();
   }
 

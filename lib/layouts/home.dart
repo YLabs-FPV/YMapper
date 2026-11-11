@@ -12,6 +12,7 @@ import 'package:ymapper/main.dart';
 import 'package:ymapper/presets/preset_manager.dart';
 import 'package:ymapper/shared/map_provider.dart';
 import 'package:ymapper/shared/value_listeneables.dart';
+import 'package:ymapper/shared/yaw_mode.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -48,6 +49,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
   final List<Marker> _flightLineArrowMarkers = [];
   final List<Marker> _takeoffLineArrowMarkers = [];
   final List<Marker> _returnLineArrowMarkers = [];
+  final List<Marker> _yawIndicatorMarkers = [];
 
   @override
   void initState() {
@@ -70,6 +72,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
       listenables.rotation = aircraftSettings.rotation;
       listenables.delayAtWaypoint = aircraftSettings.delay;
       listenables.cameraAngle = aircraftSettings.cameraAngle;
+      listenables.yawMode = aircraftSettings.yawMode;
+      listenables.customYawAngle = aircraftSettings.customYawAngle;
       listenables.onFinished = aircraftSettings.finishAction;
       listenables.rcLostAction = aircraftSettings.rcLostAction;
       listenables.groundOffset = aircraftSettings.groundOffset;
@@ -225,9 +229,11 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         listenables.fillGrid,
         listenables.homePoint);
     listenables.photoLocations = waypoints;
-    if (waypoints.isEmpty) return;
 
     _photoMarkers.clear();
+    _yawIndicatorMarkers.clear();
+
+    if (waypoints.isEmpty) return;
 
     for (int i = 0; i < waypoints.length; i++) {
       var photoLocation = waypoints[i];
@@ -259,6 +265,42 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
         ),
       ));
     }
+
+    // Draw an arrow at every waypoint showing the drone's nose/yaw
+    // direction, as distinct from the flight-line arrows below (which
+    // always show the direction of travel along the path).
+    const yawDistance = Distance();
+    double lastYawHeading = 0.0;
+    for (int i = 0; i < waypoints.length; i++) {
+      double heading;
+      if (listenables.yawMode == YawMode.customAngle) {
+        heading = listenables.customYawAngle.toDouble();
+      } else if (i < waypoints.length - 1) {
+        heading =
+            normalizeBearing(yawDistance.bearing(waypoints[i], waypoints[i + 1]));
+        lastYawHeading = heading;
+      } else {
+        heading = lastYawHeading;
+      }
+
+      _yawIndicatorMarkers.add(Marker(
+        point: waypoints[i],
+        width: 34,
+        height: 34,
+        alignment: Alignment.center,
+        rotate: false,
+        child: Transform.rotate(
+          angle: heading * pi / 180,
+          child: const Icon(
+            Icons.navigation,
+            size: 26,
+            color: Colors.deepOrange,
+            shadows: [Shadow(color: Colors.black45, blurRadius: 3)],
+          ),
+        ),
+      ));
+    }
+
     listenables.flightLine = Polyline(
         points: waypoints,
         strokeWidth: 3,
@@ -380,6 +422,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
           } else {
             listenables.photoLocations.clear();
             _photoMarkers.clear();
+            _yawIndicatorMarkers.clear();
             listenables.flightLine = null;
             listenables.takeoffLine = null;
             listenables.returnLine = null;
@@ -447,6 +490,8 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                 MarkerLayer(markers: _flightLineArrowMarkers),
                 MarkerLayer(markers: _takeoffLineArrowMarkers),
                 MarkerLayer(markers: _returnLineArrowMarkers),
+                // drone nose/yaw direction at each waypoint
+                MarkerLayer(markers: _yawIndicatorMarkers),
                 // photo markers
                 if (listenables.showPoints) MarkerLayer(markers: _photoMarkers),
                 DragMarkers(markers: [
@@ -655,6 +700,7 @@ class _HomeLayoutState extends State<HomeLayout> with TickerProviderStateMixin {
                               onTap: () => setState(() {
                                     listenables.polygon.clear();
                                     _photoMarkers.clear();
+                                    _yawIndicatorMarkers.clear();
                                     listenables.homePoint = null;
                                   }),
                               child: Padding(

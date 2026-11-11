@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ymapper/main.dart';
+import 'package:ymapper/shared/yaw_mode.dart';
 import 'package:dji_waypoint_engine/engine.dart';
 
 class AircraftSettings {
@@ -12,6 +13,8 @@ class AircraftSettings {
   int rotation;
   int delay;
   int cameraAngle;
+  YawMode yawMode;
+  int customYawAngle;
   FinishAction finishAction;
   RCLostAction rcLostAction;
 
@@ -24,6 +27,8 @@ class AircraftSettings {
     required this.rotation,
     required this.delay,
     required this.cameraAngle,
+    required this.yawMode,
+    required this.customYawAngle,
     required this.finishAction,
     required this.rcLostAction,
   });
@@ -38,6 +43,8 @@ class AircraftSettings {
       'rotation': rotation,
       'delay': delay,
       'cameraAngle': cameraAngle,
+      'yawMode': yawMode.name,
+      'customYawAngle': customYawAngle,
       'finishAction': finishAction.name,
       'rcLostAction': rcLostAction.name,
     };
@@ -53,6 +60,10 @@ class AircraftSettings {
       rotation: json['rotation'] ?? 0,
       delay: json['delay'] ?? 0,
       cameraAngle: json['cameraAngle'] ?? -90,
+      yawMode: YawMode.values.firstWhere(
+          (e) => e.name == json['yawMode'],
+          orElse: () => YawMode.followDroneDirection),
+      customYawAngle: json['customYawAngle'] ?? 0,
       finishAction: FinishAction.values.firstWhere(
           (e) => e.name == json['finishAction'],
           orElse: () => FinishAction.noAction),
@@ -71,6 +82,8 @@ class AircraftSettings {
     rotation: 0,
     delay: 0,
     cameraAngle: -90,
+    yawMode: YawMode.followDroneDirection,
+    customYawAngle: 0,
     finishAction: FinishAction.noAction,
     rcLostAction: RCLostAction.hover,
   );
